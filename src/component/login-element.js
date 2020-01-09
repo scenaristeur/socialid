@@ -38,10 +38,12 @@ class LoginElement extends LitElement {
       if (!session){
         this.webId=null
         this.agent.send('Messages',  {action:"info", info:"Not logged"});
+        this.agent.send('Inbox',  {action:"webIdChanged", webId:null});
       }
       else{
         this.webId = session.webId
         this.agent.send('Messages',  {action:"info", info:"Login "+this.webId});
+        this.agent.send('Inbox',  {action:"webIdChanged", webId:this.webId});
       }
     })
   }

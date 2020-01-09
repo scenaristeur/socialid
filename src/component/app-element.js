@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit-element';
 
 import './login-element.js'
+import './inbox-element.js'
 import './messages-element.js'
 
 class AppElement extends LitElement {
@@ -18,8 +19,8 @@ class AppElement extends LitElement {
 
   render(){
     return html`
-    Hello <b>${this.something}</b> from app-element !
     <login-element name="Login"></login-element>
+    <inbox-element name="Inbox"></inbox-element>
     <messages-element name="Messages"></messages-element>
     `;
   }

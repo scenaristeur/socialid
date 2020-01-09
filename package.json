@@ -25,8 +25,10 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
+    "@solid/query-ldflex": "^2.8.1",
     "evejs": "github:scenaristeur/evejs",
     "lit-element": "^2.2.1",
-    "solid-auth-client": "^2.4.1"
+    "solid-auth-client": "^2.4.1",
+    "solid-file-client": "^1.0.1"
   }
 }
