@@ -13,15 +13,17 @@ class InboxElement extends LitElement {
       name: {type: String},
       webId: {type: String},
       friends: {type: Array},
-      messages: {type: Array}
+      messages: {type: Array},
+      lang: {type: String},
     };
   }
 
   constructor() {
     super();
     this.webId = null
-    this.friends = [];
+    this.friends = []
     this.messages = []
+    this.lang=navigator.language
   }
 
   render(){
@@ -81,32 +83,72 @@ class InboxElement extends LitElement {
     };
   }
 
-  webIdChanged(webId){
+  async webIdChanged(webId){
     this.webId = webId
     console.log(webId)
     if (this.webId != null){
+      var websocket = this.webId.split('/')[2];
+      console.log("WEBSOCK",websocket)
       //  this.readWebId()
       //  this.readPublic()
       this.readFriends()
+      this.inbox = await data.user.inbox
+      console.log(`  - ${this.inbox}`);
       this.readInbox()
+      this.subscribe("wss://"+websocket)
     }else{
       this.inbox = ""
       this.storage = null
       this.friends = []
+      this.socket = null
     }
   }
 
-
+  subscribe(websocket){
+    var app = this
+    var log = this.inbox+"log.ttl"
+    //https://github.com/scenaristeur/spoggy-chat-solid/blob/master/index.html
+    //this.inbox.split
+    /*
+    console.log(this.inbox.split('/'))
+    var websocket = this.inbox.split('/');
+    console.log("WEBSOCK",websocket)*/
+    app.socket = new WebSocket(websocket);
+    //  console.log ("socket",app.socket)
+    app.socket.onopen = function() {
+      const d = new Date();
+      var now = d.toLocaleTimeString(app.lang) + `.${d.getMilliseconds()}`
+      this.send('sub '+log);
+      //  app.agent.send('Messages', now+"[souscription] "+this.inbox)
+      app.agent.send('Messages',  {action:"info", info: now+"[souscription] "+log});
+      console.log("OPENED SOCKET",app.socket)
+    };
+    app.socket.onmessage = function(msg) {
+      console.log("update")
+      if (msg.data && msg.data.slice(0, 3) === 'pub') {
+        console.log("update")
+        //  Date.now() - app.lastUpdate > 1000 ?   app.getAgoraData() : "";
+        app.readInbox()
+        app.notification("nouveau message")
+      }
+      //else{console.log("message inconnu",msg)}
+    };
+  }
 
   async readFriends(){
     var app = this
     this.friends = []
+    var developper = {webid: "https://spoggy.solid.community/profile/card#me", name: "Spoggy", inbox: "https://spoggy.solid.community/inbox"}
+    app.friends = [... app.friends, developper]
     for await (const friend of data.user.friends){
       //  console.log(`  - ${friend} is a friend`);
+      const f = {}
       const n = await data[friend].vcard$fn;
       const inbox = await data[friend].inbox;
       //  console.log(`NAME: ${n}`);
-      const f = {webId: `${friend}`, name: `${n}`, inbox: `${inbox}`}
+      f.webId= `${friend}`
+      f.name = `${n}`
+      f.inbox = `${inbox}`
       if (n ==undefined){
         f.name = `${friend}`
       }
@@ -150,7 +192,7 @@ class InboxElement extends LitElement {
     message.recipient = this.recipient
     message.content = this.shadowRoot.getElementById("messageContent").value.trim()
     message.title = this.shadowRoot.getElementById("title").value.trim()
-    message.url = message.recipient+message.id+".txt"
+    message.url = message.recipient+message.id+".ttl"
     console.log(message)
     this.shadowRoot.getElementById("messageContent").value = ""
     this.shadowRoot.getElementById("writePan").style.display = "none"
@@ -169,14 +211,27 @@ class InboxElement extends LitElement {
   await data[mess].schema$text.add(message.content);
   await data[mess].rdfs$label.add(message.title)
   await data[mess].schema$dateSent.add(message.date.toISOString())
-  await data[mess].rdf$type.add('https://schema.org/Message')
+  await data[mess].rdf$type.add(namedNode('https://schema.org/Message'))
   await data[mess].schema$sender.add(namedNode(this.webId))
   //return "test"
+  var notif = message.recipient+"log.ttl#"+message.id
+  await data[notif].schema$message.add(namedNode(mess))
+  /*var detail = notif+"#"+mess
+  await data[detail].schema$sender.add(namedNode(this.webId))*/
+}
+
+notification(notificationMessage){
+  Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+      navigator.serviceWorker.ready.then(function(registration) {
+      //  console.log("notif")
+        registration.showNotification('Notificatiooooooon test '+notificationMessage);
+      });
+    }
+  });
 }
 
 async readInbox(){
-  this.inbox = await data.user.inbox
-  console.log(`  - ${this.inbox}`);
   let inboxFolder = await this.fc.readFolder(`${this.inbox}`)
   console.log(inboxFolder)
   this.messages = inboxFolder.files;
