@@ -3,6 +3,12 @@ https://scenaristeur.github.io/socialid
 
 inbox inspired by https://dev.to/phadventure/how-a-chess-app-interacts-with-solid-409a
 
+https://github.com/solid/solid-inbox/blob/gh-pages/app/app.js
+
+https://lov.linkeddata.es/dataset/lov/terms?q=Mail%20Message
+
+
+
 # The template
 https://scenaristeur.github.io/socialid-template/
 
