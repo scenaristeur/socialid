@@ -3,6 +3,8 @@ import { HelloAgent } from '../agents/hello-agent.js';
 import * as auth from 'solid-auth-client';
 import SolidFileClient from 'solid-file-client';
 import data from "@solid/query-ldflex";
+import { namedNode } from '@rdfjs/data-model';
+//import { schema, rdf, rdfs } from 'rdf-namespaces';
 
 class InboxElement extends LitElement {
 
@@ -148,7 +150,7 @@ class InboxElement extends LitElement {
     message.recipient = this.recipient
     message.content = this.shadowRoot.getElementById("messageContent").value.trim()
     message.title = this.shadowRoot.getElementById("title").value.trim()
-    message.url = message.recipient+message.id+".ttl"
+    message.url = message.recipient+message.id+".txt"
     console.log(message)
     this.shadowRoot.getElementById("messageContent").value = ""
     this.shadowRoot.getElementById("writePan").style.display = "none"
@@ -165,10 +167,10 @@ class InboxElement extends LitElement {
   });*/
   var mess = message.url
   await data[mess].schema$text.add(message.content);
-/*  await data[mess].rdfs$label.add(message.title)
+  await data[mess].rdfs$label.add(message.title)
   await data[mess].schema$dateSent.add(message.date.toISOString())
-  await data[mess].rdf$type.add(namedNode(schema$Message))
-  await data[mess].schema$sender.add(namedNode(this.webId))*/
+  await data[mess].rdf$type.add('https://schema.org/Message')
+  await data[mess].schema$sender.add(namedNode(this.webId))
   //return "test"
 }
 

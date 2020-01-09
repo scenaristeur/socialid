@@ -25,9 +25,11 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
+    "@rdfjs/data-model": "^1.1.2",
     "@solid/query-ldflex": "^2.8.1",
     "evejs": "github:scenaristeur/evejs",
     "lit-element": "^2.2.1",
+    "rdf-namespaces": "^1.7.0",
     "solid-auth-client": "^2.4.1",
     "solid-file-client": "^1.0.1"
   }
