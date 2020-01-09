@@ -1,0 +1,19 @@
+{
+  "name": "Socialid",
+  "short_name": "Socialid",
+  "start_url": "./",
+  "background_color": "red",
+  "theme_color": "aliceblue",
+  "description": "Solid mailbox !",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
+  "related_applications": [{
+    "platform": "web",
+    "url": "https://scenaristeur.github.io/socialid/"
+  }],
+  "permissions": {
+    "desktop-notification": {
+      "description": "Needed for creating system notifications."
+    }
+  }
+}
