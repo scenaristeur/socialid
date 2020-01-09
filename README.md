@@ -1,7 +1,7 @@
 # The app
 https://scenaristeur.github.io/socialid
 
-
+inbox inspired by https://dev.to/phadventure/how-a-chess-app-interacts-with-solid-409a
 
 # The template
 https://scenaristeur.github.io/socialid-template/

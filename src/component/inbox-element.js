@@ -10,14 +10,16 @@ class InboxElement extends LitElement {
     return {
       name: {type: String},
       webId: {type: String},
-      friends: {type: Array}
+      friends: {type: Array},
+      messages: {type: Array}
     };
   }
 
   constructor() {
     super();
     this.webId = null
-    this.friends = []
+    this.friends = [];
+    this.messages = []
   }
 
   render(){
@@ -27,6 +29,13 @@ class InboxElement extends LitElement {
     ${friends.map((f) => html`${this.templateFriend(f)}`)}
     `;
 
+    const messageList = (messages) => html`
+    <h5>Messages (${messages.length})</h5>
+    ${messages.map((m) => html`${this.templateMessageEntete(m)}`)}
+    `;
+
+
+
     return html`
     <div>
     ${this.webId == null ?
@@ -34,6 +43,7 @@ class InboxElement extends LitElement {
       : html`
       Inbox of <b>${this.webId}</b> !
       ${friendList(this.friends)}
+      ${messageList(this.messages)}
       `
     }
     </div>
@@ -65,7 +75,7 @@ class InboxElement extends LitElement {
       //  this.readWebId()
       //  this.readPublic()
       this.readFriends()
-      //    this.readInbox()
+      this.readInbox()
     }else{
       this.inbox = ""
       this.storage = null
@@ -79,10 +89,11 @@ class InboxElement extends LitElement {
     var app = this
     this.friends = []
     for await (const friend of data.user.friends){
-    //  console.log(`  - ${friend} is a friend`);
+      //  console.log(`  - ${friend} is a friend`);
       const n = await data[friend].vcard$fn;
-    //  console.log(`NAME: ${n}`);
-      const f = {webId: `${friend}`, name: `${n}`}
+      const inbox = await data[friend].inbox;
+      //  console.log(`NAME: ${n}`);
+      const f = {webId: `${friend}`, name: `${n}`, inbox: `${inbox}`}
       if (n ==undefined){
         f.name = `${friend}`
       }
@@ -94,7 +105,15 @@ class InboxElement extends LitElement {
   templateFriend(f){
     return html`
     <div class="friend">
-    <a href="${f.webId}" target="_blank">${f.name}</a>
+    <a href="${f.webId}" target="_blank">${f.name}</a> inbox : ${f.inbox}
+    </div>
+    `
+  }
+
+  templateMessageEntete(m){
+    return html`
+    <div class="message">
+    <a href="${m.url}" target="_blank">${m.name}</a>
     </div>
     `
   }
@@ -103,8 +122,9 @@ class InboxElement extends LitElement {
   async readInbox(){
     this.inbox = await data.user.inbox
     console.log(`  - ${this.inbox}`);
-    let inboxFolder = await this.fc.readFile( this.inbox )
+    let inboxFolder = await this.fc.readFolder(`${this.inbox}`)
     console.log(inboxFolder)
+    this.messages = inboxFolder.files;
   }
 
   async readPublic(){
