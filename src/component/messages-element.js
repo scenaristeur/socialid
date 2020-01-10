@@ -22,7 +22,6 @@ class MessagesElement extends LitElement {
     <ul id="messageslist" style="height: 20vh; overflow: auto">
     ${this.messages.map((m) => html`<li><b>Agent ${m.from}</b> say "${m.message}"</li>`)}
     </ul>
-
   <!--  </pre>-->
     `;
   }

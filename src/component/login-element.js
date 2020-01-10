@@ -18,13 +18,11 @@ class LoginElement extends LitElement {
 
   render(){
     return html`
-    <!-- if this.webId == null , login button is diaplayed -->
     ${this.webId == null ?
       html`
       <button @click=${this.login}>Login</button>
       `
       : html`
-      <!-- else logout button is displayed -->
       <button @click=${this.logout}>Logout</button>
       ${this.webId}
       `
@@ -62,7 +60,5 @@ class LoginElement extends LitElement {
     if (!session)
     session = await auth.popupLogin({ popupUri });
   }
-
 }
-
 customElements.define('login-element', LoginElement);
