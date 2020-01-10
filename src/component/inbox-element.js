@@ -171,7 +171,15 @@ class InboxElement extends LitElement {
   templateMessageEntete(m){
     return html`
     <div class="message">
+    <a href="${m.sender}" target="_blank">${m.senderName}</a> :
+    <a href="${m.url}" target="_blank">${m.label}</a>
+
+
+    Contenu: ${m.text}
+
     <a href="${m.url}" target="_blank">${m.name}</a>
+
+    ${m.dateSent}
     </div>
     `
   }
@@ -224,7 +232,7 @@ notification(notificationMessage){
   Notification.requestPermission(function(result) {
     if (result === 'granted') {
       navigator.serviceWorker.ready.then(function(registration) {
-      //  console.log("notif")
+        //  console.log("notif")
         registration.showNotification('Notificatiooooooon test '+notificationMessage);
       });
     }
@@ -235,7 +243,23 @@ async readInbox(){
   let inboxFolder = await this.fc.readFolder(`${this.inbox}`)
   console.log(inboxFolder)
   this.messages = inboxFolder.files;
+  await this.getMessagePreview()
 }
+
+async getMessagePreview(){
+  var app = this
+  this.messages.forEach(async function(m){
+    var d = new Date();
+    m.label = await data[m.url].rdfs$label
+    m.sender = await data[m.url].schema$sender
+  //  var date = await data[m.url].schema$dateSent
+    m.dateSent = await data[m.url].schema$dateSent //date.parse() //.toLocaleTimeString(app.lang)
+    m.text = await data[m.url].schema$text
+    m.senderName = await data[m.sender].vcard$fn;
+  })
+}
+
+
 
 async readPublic(){
   this.storage = await data.user.storage
