@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Socialid</title>
+  <link rel="manifest" href="/manifest.json">
+    <script src="./vendor/rdflib/rdflib.min.js"></script>
+</head>
+<body>
+  <app-element name="App"></app-element>
+  <script src="app-element.js"></script>
+  <footer>
+    <a href="https://github.com/scenaristeur/socialid" target="_blank">source</a>  <a href="https://github.com/scenaristeur/socialid-template" target="_blank">source template</a>
+  </footer>
+</body>
+<!--<script src="notif-test.js"></script>-->
+<script>
+//https://stackoverflow.com/questions/31512504/html5-notification-not-working-in-mobile-chrome
+navigator.serviceWorker.register('sw.js');
+</script>
+</html>
