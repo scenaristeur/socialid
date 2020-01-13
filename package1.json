@@ -1,0 +1,39 @@
+{
+  "name": "socialid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server -d --hot --config webpack.config.js --watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scenaristeur/socialid.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scenaristeur/socialid/issues"
+  },
+  "homepage": "https://github.com/scenaristeur/socialid#readme",
+  "devDependencies": {
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {
+    "@rdfjs/data-model": "^1.1.2",
+    "@solid/query-ldflex": "^2.8.1",
+    "evejs": "github:scenaristeur/evejs",
+    "fs": "0.0.1-security",
+    "lit-element": "^2.2.1",
+    "rdf-namespaces": "^1.7.0",
+    "rdflib": "^1.0.7-3",
+    "solid-auth-client": "^2.4.1",
+    "solid-file-client": "^1.0.1",
+    "tripledoc": "^4.0.0"
+  }
+}
