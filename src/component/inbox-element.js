@@ -218,14 +218,18 @@ class InboxElement extends LitElement {
   write(e){
     this.recipient = e.target.getAttribute("inbox")
     this.shadowRoot.getElementById("writePan").style.display = "block"
-    this.shadowRoot.getElementById("to").value=this.recipient
+    this.shadowRoot.getElementById("to").value= this.recipient
   }
   async send(){
     var message = {}
     message.date = new Date(Date.now())
     message.id = message.date.getTime()
     message.sender = this.webId
-    message.recipient = this.recipient
+    message.recipient = this.shadowRoot.getElementById("to").value
+    if( !message.recipient.endsWith("/") ){
+      message.recipient = message.recipient+"/";
+    }
+
     message.content = this.shadowRoot.getElementById("messageContent").value.trim()
     message.title = this.shadowRoot.getElementById("title").value.trim()
     message.url = message.recipient+message.id+".ttl"
@@ -234,7 +238,7 @@ class InboxElement extends LitElement {
     this.shadowRoot.getElementById("messageContent").value = ""
     this.shadowRoot.getElementById("writePan").style.display = "none"
     if(message.content.length > 0 && message.title.length > 0 && message.recipient.length > 0){
-        this.buildMessage(message)
+      this.buildMessage(message)
     }else{
       alert("Recipient or title or content is empty")
     }
